@@ -2,9 +2,16 @@ package helper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Word;
 
 public class MyHelper extends SQLiteOpenHelper {
 private static final String databaseName="DictonaryDB";
@@ -42,5 +49,28 @@ db.execSQL(query);
         id=db.insert(tblWord,null,contentValues);
         return id;
 
+    }
+
+    public List<model.Word> GetAllWords(SQLiteDatabase db) {
+    List<Word>dictionaryList=new ArrayList<>();
+        Cursor cursor=db.rawQuery("select * from tblWord",null);
+        if(cursor.getCount()>0){
+
+        }
+        return dictionaryList;
+    }
+
+    public List<Word>GetWordByName(String word,SQLiteDatabase db){
+    List<Word> dictionaryList=new ArrayList<>();
+    Cursor cursor=db.rawQuery("select * from tblWord where Word =?",new String[]{
+            word
+    });
+    if (cursor.getCount()>0){
+        while(cursor.moveToNext()){
+            dictionaryList.add(new Word(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
+
+        }
+    }
+    return dictionaryList;
     }
 }
